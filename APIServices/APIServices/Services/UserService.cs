@@ -1,8 +1,13 @@
-﻿using APIServices.Models;
+﻿using APIServices.Common;
+using APIServices.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
+using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -14,17 +19,14 @@ namespace APIServices.Services
     public interface IUserService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model);
-        IEnumerable<User> GetAll();
+        List<User> GetAll();
         User GetById(int id);
     }
 
     public class UserService : IUserService
     {
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = new List<User>
-        {
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
-        };
+        private List<User> _users = null;
 
         private readonly AppSettings _appSettings;
 
@@ -39,7 +41,7 @@ namespace APIServices.Services
         /// <returns></returns>
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+            var user = _users.SingleOrDefault(x => x.USERNAME == model.Username && x.PASSWORD == model.Password);
 
             if (user == null) return null;
 
@@ -48,9 +50,14 @@ namespace APIServices.Services
             return new AuthenticateResponse(user, token);
         }
 
-        public IEnumerable<User> GetAll()
+        public List<User> GetAll()
         {
-            return _users;
+            string query = @"
+                select *
+                from infomation.user
+            ";
+
+            return DAOHelper.ExecStoreToObject<User>(query, _appSettings.ConnectionString);
         }
         /// <summary>
         /// Lấy thông tin User
@@ -59,7 +66,7 @@ namespace APIServices.Services
         /// <returns></returns>
         public User GetById(int id)
         {
-            return _users.FirstOrDefault(x => x.Id == id);
+            return _users.FirstOrDefault(x => x.USERID == id);
         }
 
         /// <summary>
@@ -73,7 +80,7 @@ namespace APIServices.Services
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.USERID.ToString()) }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

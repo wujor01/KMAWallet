@@ -3,8 +3,10 @@ using APIServices.Security;
 using APIServices.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,11 +34,11 @@ namespace APIServices.Controllers
         }
 
         [HttpGet]
-        [JWTAuthorize]
+        //[JWTAuthorize]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
-            return Ok(users);
+            var lstUser = _userService.GetAll();
+            return Ok(lstUser);
         }
     }
 }
