@@ -20,8 +20,8 @@ namespace APIServices.Controllers
         {
             _userService = userService;
         }
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate(AuthenticateRequest model)
+        [HttpPost]
+        public IActionResult Login(AuthenticateRequest model)
         {
             var response = _userService.Authenticate(model);
 
@@ -32,7 +32,7 @@ namespace APIServices.Controllers
         }
 
         [HttpGet]
-        //[JWTAuthorize]
+        [JWTAuthorize]
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();

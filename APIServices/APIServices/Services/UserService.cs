@@ -32,15 +32,17 @@ namespace APIServices.Services
         {
             _appSettings = appSettings.Value;
         }
-
+        /// <summary>
+        /// Hàm xác thực tài khoản, tạo token
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
             var user = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
 
-            // return null if user not found
             if (user == null) return null;
 
-            // authentication successful so generate jwt token
             var token = generateJwtToken(user);
 
             return new AuthenticateResponse(user, token);
@@ -50,17 +52,23 @@ namespace APIServices.Services
         {
             return _users;
         }
-
+        /// <summary>
+        /// Lấy thông tin User
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public User GetById(int id)
         {
             return _users.FirstOrDefault(x => x.Id == id);
         }
 
-        // helper methods
-
+        /// <summary>
+        /// Tạo jwt token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private string generateJwtToken(User user)
         {
-            // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
