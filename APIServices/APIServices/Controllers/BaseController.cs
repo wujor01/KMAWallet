@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using APIServices.Security;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace APIServices.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [JWTAuthorize]
     public class BaseController : ControllerBase
     {
 
