@@ -23,7 +23,6 @@ namespace APIServices.Services.HubSignalR
         public async Task SendMessage(string user, string message)
         {
             UserService userService = new UserService(_appSettings);
-            userService.UpdateConnectionId(user, Context.ConnectionId);
             await Clients.All.SendAsync("ReceiveMessage", Context.ConnectionId, message);
         }
     }
