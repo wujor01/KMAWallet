@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace APIServices
 {
@@ -23,6 +24,8 @@ namespace APIServices
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+                            options.AddDefaultPolicy(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -49,17 +52,13 @@ namespace APIServices
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIServices v1"));
             }
 
+            app.UseCors();
+
             //app.UseHttpsRedirection();
 
             app.UseRouting();
 
             //app.UseAuthorization();
-
-            // global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
 
             // custom jwt auth middleware
             app.UseMiddleware<JWTMiddleware>();
@@ -67,7 +66,7 @@ namespace APIServices
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chatHub");
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

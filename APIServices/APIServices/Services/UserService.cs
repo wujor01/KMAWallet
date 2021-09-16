@@ -54,7 +54,7 @@ namespace APIServices.Services
         {
             string query = @"
                 select *
-                from infomation.user
+                from masterdata.user
             ";
 
             return DAOHelper.ExecStoreToObject<User>(query, _appSettings.ConnectionString);
