@@ -86,9 +86,14 @@ namespace APIServices.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public void UpdateConnectionId(long userid, string connectionId)
+        public void UpdateConnectionId(string username, string connectionId)
         {
-            ExecStoreNoneQuery(new List<object> {userid, connectionId}, "masterdata.user_connectionid_upd", _appSettings.ConnectionString);
+            ExecStoreNoneQuery(new List<object> { username, connectionId}, "masterdata.user_connectionid_upd", _appSettings.ConnectionString);
+        }
+
+        public User GetByUsername(string username)
+        {
+            return ExecStoreToObject<User>(new List<object> { username }, "masterdata.user_getbyusername", _appSettings.ConnectionString).FirstOrDefault();
         }
     }
 }

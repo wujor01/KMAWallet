@@ -20,19 +20,10 @@ namespace APIServices.Services.HubSignalR
             _appSettings = appSettings;
         }
 
-        public override Task OnConnectedAsync()
-        {
-            UserService userService = new UserService(_appSettings);
-
-            string name = Context.User.Identity.Name;
-            userService.UpdateConnectionId(1, Context.ConnectionId);
-            return base.OnConnectedAsync();
-        }
-
         public async Task SendMessage(string user, string message)
         {
-            string name = Context.User.Identity.Name;
-
+            UserService userService = new UserService(_appSettings);
+            userService.UpdateConnectionId(user, Context.ConnectionId);
             await Clients.All.SendAsync("ReceiveMessage", Context.ConnectionId, message);
         }
     }
