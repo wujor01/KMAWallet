@@ -15,5 +15,6 @@ namespace APIServices.Models
         [JsonIgnore]
         public string PASSWORD { get; set; }
         public string CONNECTIONID { get; set; }
+        public DateTime? LASTSIGNIN { get; set; }
     }
 }

@@ -20,14 +20,12 @@ namespace APIServices.Services
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         List<User> GetAll();
-        User GetById(int id);
+        User GetById(long id);
     }
 
     public class UserService : DAOHelper, IUserService
     {
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = null;
-
         private readonly AppSettings _appSettings;
 
         public UserService(IOptions<AppSettings> appSettings)
@@ -64,9 +62,9 @@ namespace APIServices.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public User GetById(int id)
+        public User GetById(long id)
         {
-            return _users.FirstOrDefault(x => x.USERID == id);
+            return ExecStoreToObject<User>(new List<object> { id }, "masterdata.user_getbyid", _appSettings.ConnectionString).FirstOrDefault();
         }
 
         /// <summary>
