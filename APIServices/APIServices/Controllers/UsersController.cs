@@ -1,8 +1,10 @@
 ﻿using APIServices.Models;
 using APIServices.Security;
 using APIServices.Services;
+using APIServices.Services.HubSignalR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,10 +19,14 @@ namespace APIServices.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private readonly AppSettings _appSettings;
 
-        public UsersController(IUserService userService)
+        private IHubContext<ChatHub> _hubContext;
+
+        public UsersController(IUserService userService, IHubContext<ChatHub> hubContext)
         {
             _userService = userService;
+            _hubContext = hubContext;
         }
         [HttpPost]
         public IActionResult Login(AuthenticateRequest model)
@@ -35,9 +41,10 @@ namespace APIServices.Controllers
 
         [HttpGet]
         //[JWTAuthorize]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var lstUser = _userService.GetAll();
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", "system", "hello");
             return Ok(lstUser);
         }
     }
