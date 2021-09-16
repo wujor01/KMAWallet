@@ -19,8 +19,6 @@ namespace APIServices.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
-        private readonly AppSettings _appSettings;
-
         private IHubContext<ChatHub> _hubContext;
 
         public UsersController(IUserService userService, IHubContext<ChatHub> hubContext)
@@ -44,7 +42,7 @@ namespace APIServices.Controllers
         public async Task<IActionResult> GetAll()
         {
             var lstUser = _userService.GetAll();
-            await _hubContext.Clients.All.SendAsync("ReceiveMessage", "system", "hello");
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", "hi", "hello");
             return Ok(lstUser);
         }
     }

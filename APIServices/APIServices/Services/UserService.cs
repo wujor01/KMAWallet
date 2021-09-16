@@ -23,7 +23,7 @@ namespace APIServices.Services
         User GetById(int id);
     }
 
-    public class UserService : IUserService
+    public class UserService : DAOHelper, IUserService
     {
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
         private List<User> _users = null;
@@ -57,7 +57,7 @@ namespace APIServices.Services
                 from masterdata.user
             ";
 
-            return DAOHelper.ExecStoreToObject<User>(query, _appSettings.ConnectionString);
+            return DAOHelper.ExecQueryToObject<User>(query, _appSettings.ConnectionString);
         }
         /// <summary>
         /// Lấy thông tin User
@@ -86,6 +86,11 @@ namespace APIServices.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public void UpdateConnectionId(long userid, string connectionId)
+        {
+            ExecStoreNoneQuery(new List<object> {userid, connectionId}, "masterdata.user_connectionid_upd", _appSettings.ConnectionString);
         }
     }
 }
