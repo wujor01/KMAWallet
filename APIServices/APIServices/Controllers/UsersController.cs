@@ -37,8 +37,8 @@ namespace APIServices.Controllers
             return Ok(response);
         }
 
+        [JWTAuthorize]
         [HttpGet]
-        //[JWTAuthorize]
         public async Task<IActionResult> GetAll()
         {
             var lstUser = _userService.GetAll();

@@ -51,12 +51,12 @@ namespace APIServices
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIServices v1"));
             }
+            app.UseRouting();
 
             app.UseCors();
 
             //app.UseHttpsRedirection();
 
-            app.UseRouting();
 
             //app.UseAuthorization();
 

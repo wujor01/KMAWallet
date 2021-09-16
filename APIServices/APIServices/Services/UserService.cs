@@ -41,7 +41,7 @@ namespace APIServices.Services
         /// <returns></returns>
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _users.SingleOrDefault(x => x.USERNAME == model.Username && x.PASSWORD == model.Password);
+            var user = ExecStoreToObject<User>(new List<object> { model.Username, model.Password},"masterdata.user_getbyuserpwd", _appSettings.ConnectionString).FirstOrDefault();
 
             if (user == null) return null;
 

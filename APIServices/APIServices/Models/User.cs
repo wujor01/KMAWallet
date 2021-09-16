@@ -14,5 +14,6 @@ namespace APIServices.Models
         public string USERNAME { get; set; }
         [JsonIgnore]
         public string PASSWORD { get; set; }
+        public string CONNECTIONID { get; set; }
     }
 }
