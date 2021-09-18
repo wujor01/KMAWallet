@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Wallet",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

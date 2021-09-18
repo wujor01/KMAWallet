@@ -1,0 +1,27 @@
+<ion-header>
+</ion-header>
+
+<ion-content>
+  <form #form="ngForm" (ngSubmit)="fnLogin(form)">
+    <ion-grid style="padding-top: 50%;">
+      <ion-row justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <div style="text-align: center;">
+            <h3>Đăng nhập</h3>
+          </div>
+          <div padding>
+            <ion-item>
+              <ion-input name="username" type="email" placeholder="Tên đăng nhập" ngModel required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input name="password" type="password" placeholder="Mật khẩu" ngModel required></ion-input>
+            </ion-item>
+          </div>
+          <div padding>
+            <ion-button color="success" size="large" type="submit" [disabled]="form.invalid" expand="block">Đăng nhập</ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
